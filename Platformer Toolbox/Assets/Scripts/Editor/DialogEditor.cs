@@ -95,9 +95,10 @@ public class DialogEditor : EditorWindow {
 			currentSceneDialog = XML_Loader.Deserialize <SceneDialogs> ((Path.Combine (Application.dataPath, xmlPath)));
 			if (currentSceneDialog.allDialogsInScene [0] != null) {
 				SelectDialogByID (0);
-				if (selectedDialog.DialogLines.Count != 0) {
+				selectedDialogLine = null;
+				/*if (selectedDialog.DialogLines.Count != 0) {
 					SelectDialogLine (0);
-				}
+				}*/
 			}
 		} else {
 			Debug.LogError ("XML File: " + (Path.Combine (Application.dataPath, xmlPath)) + " is not found.");
@@ -205,9 +206,11 @@ public class DialogEditor : EditorWindow {
 			gridNodes.Add (new DialogGridNode (line, r, SelectDialogLine));
 			i++;
 		}
-		if (selectedDialog.DialogLines.Count > 0) {
+		selectedDialogLine = null;
+
+		/*if (selectedDialog.DialogLines.Count > 0) {
 			SelectDialogLine (0);
-		}
+		}*/
 	}
 
 	// Changes the selected Dialog's ID and description
@@ -358,12 +361,18 @@ public class DialogEditor : EditorWindow {
 				DrawNodeCurve (windows [line.lineID], (line.followUpLine != -1) ? windows [line.followUpLine] : endNode);
 			} else {
 				foreach (Response r in line.responses) {
-					DrawNodeCurve (windows [line.lineID], (r.followupLine < 0) ? endNode : windows [r.followupLine]);
+					if (windows [line.lineID] != null) {
+						if (r.followupLine < 0)			// Draws the nodes, but checks if the required windows exist
+							DrawNodeCurve (windows [line.lineID], endNode);
+						else if (windows [r.followupLine] != null)
+							DrawNodeCurve (windows [line.lineID], windows [r.followupLine]);
+					}
 				}
 			}
 		}
 	}
 
+	// Creates the Start and End nodes
 	private void StartEndNodes (int id) {
 		if (id == -1)
 			GUILayout.Label ("Start", EditorStyles.boldLabel);
@@ -577,12 +586,16 @@ public class DialogEditor : EditorWindow {
 							selectedSprite = new KeyValuePair<string, Sprite> (spriteNameArray [spriteInputIndex], selectedActor.actorSprites [spriteInputIndex]);
 						}
 						GUILayout.Label (selectedActor.actorName, EditorStyles.label, GUILayout.Width (150));
-
 					}
 				}
 
 				lineTextInput = EditorGUILayout.TextField ("Line Text: ", lineTextInput);
-				responseCountInput = EditorGUILayout.IntField ("Response Count: ", responseCountInput, GUILayout.Width (100));
+
+				if (responseCountInput <= 0) {
+					GUILayout.Label ("The ID of the Dialog Line that comes after this one if no responses are added.");
+					followUpLineInput = EditorGUILayout.IntField ("Followup Line ID: ", followUpLineInput, GUILayout.Width (200));
+				}
+				responseCountInput = EditorGUILayout.IntField ("Response Count: ", responseCountInput, GUILayout.Width (200));
 				GUILayout.Label ("Current Response Count: " + selectedDialogLine.responses.Count, EditorStyles.label);
 
 				if (responseCountInput != responseTextInput.Count)
@@ -595,7 +608,8 @@ public class DialogEditor : EditorWindow {
 						GUILayout.Label ("Response ID: " + i, EditorStyles.label);
 
 						responseTextInput[i] = EditorGUILayout.TextField ("Response Text: ", responseTextInput[i]);
-						responseFollowUpIDInput[i] = EditorGUILayout.IntField ("Followup ID: ", responseFollowUpIDInput[i], GUILayout.Width (100));
+						GUILayout.Label ("The ID of the Dialog Line that comes if this reply is clicked.");
+						responseFollowUpIDInput [i] = EditorGUILayout.IntField ("Followup ID: ", responseFollowUpIDInput[i], GUILayout.Width (100));
 
 						EditorGUILayout.Space ();
 					}
