@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="Windows-1252"?>
+<SceneDialogs xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema">
+  <Dialog ID="0" BigSprites="true">
+    <Description>Example Dialog</Description>
+    <DialogLine lineID="0">
+      <FollowUpLine>-1</FollowUpLine>
+      <actorObjectName>Henk</actorObjectName>
+      <spriteObjectName>Default</spriteObjectName>
+      <DialogText>Hallo Dit is een coole conversatie met jou</DialogText>
+      <Response responseID="2">
+        <ResponseText>Wow, wat cool zeg</ResponseText>
+        <FollowUpLine>2</FollowUpLine>
+      </Response>
+      <Response responseID="1">
+        <ResponseText>Nou, ik vind het maar een beetje matig.</ResponseText>
+        <FollowUpLine>1</FollowUpLine>
+      </Response>
+    </DialogLine>
+    <DialogLine lineID="1">
+      <FollowUpLine>-1</FollowUpLine>
+      <actorObjectName>Henk</actorObjectName>
+      <spriteObjectName>Default</spriteObjectName>
+      <DialogText>Nou nou, altijd wat te zeuren he.</DialogText>
+    </DialogLine>
+    <DialogLine lineID="2">
+      <FollowUpLine>-1</FollowUpLine>
+      <actorObjectName>Henk</actorObjectName>
+      <spriteObjectName>Default</spriteObjectName>
+      <DialogText>Dit is het einde van de coole conversatie.</DialogText>
+    </DialogLine>
+  </Dialog>
+</SceneDialogs>
